@@ -1,0 +1,62 @@
+// fonts
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('../public/fonts/SFProDisplay-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Display Bold';
+  src: url('../public/fonts/SFProDisplay-Semibold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+$font-primary: 'SF Pro Display', sans-serif;
+$font-tertiary: 'SF Pro Display Bold', sans-serif;
+
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+  // border: solid 2px red;
+}
+
+
+html {
+  font-size: 62.5%; // 10px
+  box-sizing: border-box;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+
+  @media only screen and (max-width: 62.5em) {
+    font-size: 56.25%;
+  }
+
+  @media only screen and (max-width: 56.25em) {
+    font-size: 54%;
+  }
+
+  @media only screen and (max-width: 37.5em) {
+    font-size: 51%;
+  }
+
+  @media only screen and (min-width: 140.5em) {
+    font-size: 75%;
+  }
+}
+
+body {
+  font-family: $font-primary, sans-serif;
+  font-size: 1.6rem;
+  position: relative;
+}
