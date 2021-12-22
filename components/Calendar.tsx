@@ -3,6 +3,227 @@ import React from "react";
 interface CalendarProps {}
 
 const Calendar: React.FC<CalendarProps> = ({}) => {
+  const date = new Date();
+
+  const [month, setMonth] = React.useState<string>("July");
+  let [monthIndex, setMonthIndex] = React.useState<number>(date.getMonth());
+  let [yesterday, setYesterday] = React.useState<number>();
+  let [thisMonday, setThisMonday] = React.useState<number>();
+  let [lastMonday, setLastMonday] = React.useState<number>();
+  let [today, setToday] = React.useState<number>(new Date().getDate());
+  const [year, setYear] = React.useState<string>("2029");
+  const [previousDays, setPreviousDays] = React.useState<Array<number>>([]);
+  const [currentDays, setCurrentDays] = React.useState<Array<number>>([]);
+  const [nextDays, setNextDays] = React.useState<Array<number>>([]);
+
+  React.useEffect(() => {
+    renderCalendar();
+  }, []);
+
+  const renderCalendar = () => {
+    const months: string[] = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    setMonth(months[date.getMonth()]);
+    setYear(date.getFullYear().toString());
+
+    const lastDay = new Date(
+      date.getFullYear(),
+      date.getMonth() + 1,
+      0
+    ).getDate();
+
+    const prevLastDay: number = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      0
+    ).getDate();
+
+    const firstDayIndex = date.getDay();
+
+    const lastDayIndex = new Date(
+      date.getFullYear(),
+      date.getMonth() + 1,
+      0
+    ).getDay();
+
+    const nextDays = 7 - lastDayIndex - 1;
+
+    // prev days
+    let previousDays: number[] = [];
+    for (let x = firstDayIndex; x > 0; x--) {
+      previousDays.push(prevLastDay - x + 1);
+      setPreviousDays([...previousDays]);
+    }
+
+    // current days
+    let currentDays: number[] = [];
+    for (let i = 1; i <= lastDay; i++) {
+      currentDays.push(i);
+      setCurrentDays([...currentDays]);
+    }
+
+    // next days
+    let nextDate: number[] = [];
+    for (let j = 1; j <= nextDays; j++) {
+      nextDate.push(j);
+      setNextDays([...nextDate]);
+    }
+  };
+
+  const previousMonth = () => {
+    date.setMonth(monthIndex - 1);
+    setMonthIndex(--monthIndex);
+    setToday(0);
+    setYesterday(undefined);
+    setThisMonday(undefined);
+    setLastMonday(undefined);
+
+    renderCalendar();
+  };
+  const nextMonth = () => {
+    date.setMonth(monthIndex + 1);
+    setMonthIndex(++monthIndex);
+    setToday(0);
+    setYesterday(undefined);
+    setThisMonday(undefined);
+    setLastMonday(undefined);
+
+    renderCalendar();
+  };
+  const renderToday = () => {
+    date.setMonth(date.getMonth());
+    setMonthIndex(date.getMonth());
+    setYesterday(undefined);
+    setThisMonday(undefined);
+    setLastMonday(undefined);
+    // if (monthIndex === new Date().getMonth()) {
+    const today = new Date().getDate();
+    setToday(today);
+    // }
+    renderCalendar();
+  };
+  const renderYesterday = () => {
+    date.setMonth(date.getMonth());
+    setMonthIndex(date.getMonth());
+    setToday(0);
+    setYesterday(new Date().getDate() - 1);
+    setThisMonday(undefined);
+    setLastMonday(undefined);
+    renderCalendar();
+  };
+  const renderThisMonday = () => {
+    date.setMonth(date.getMonth());
+    setMonthIndex(date.getMonth());
+    setToday(0);
+    setYesterday(undefined);
+    setLastMonday(undefined);
+    const dateIndex = date.getDay();
+
+    switch (dateIndex) {
+      case 0:
+        setThisMonday(date.getDate() + 1);
+        break;
+      case 1:
+        setThisMonday(date.getDate());
+        break;
+      case 2:
+        setThisMonday(date.getDate() - 1);
+        break;
+      case 3:
+        setThisMonday(date.getDate() - 2);
+        break;
+      case 4:
+        setThisMonday(date.getDate() - 3);
+        break;
+      case 5:
+        setThisMonday(date.getDate() - 4);
+        break;
+      case 6:
+        setThisMonday(date.getDate() - 5);
+        break;
+      default:
+        break;
+    }
+
+    renderCalendar();
+  };
+
+  const renderLastMonday = () => {
+    date.setMonth(date.getMonth());
+    setMonthIndex(date.getMonth());
+    setToday(0);
+    setYesterday(undefined);
+    setThisMonday(undefined);
+    const dateIndex = date.getDay();
+
+    switch (dateIndex) {
+      case 0:
+        setLastMonday(date.getDate() - 6);
+        break;
+      case 1:
+        setLastMonday(date.getDate() - 7);
+        break;
+      case 2:
+        setLastMonday(date.getDate() - 8);
+        break;
+      case 3:
+        setLastMonday(date.getDate() - 9);
+        break;
+      case 4:
+        setLastMonday(date.getDate() - 10);
+        break;
+      case 5:
+        setLastMonday(date.getDate() - 11);
+        break;
+      case 6:
+        setLastMonday(date.getDate() - 12);
+        break;
+      default:
+        break;
+    }
+
+    renderCalendar();
+    // setLastMonday(thisMonday - 6);
+  };
+
+  const renderThisMonth = () => {
+    date.setMonth(date.getMonth());
+    setMonthIndex(date.getMonth());
+    setToday(0);
+    setYesterday(0);
+    setThisMonday(undefined);
+    setLastMonday(undefined);
+    renderCalendar();
+  };
+  const renderLastMonth = () => {
+    date.setMonth(date.getMonth() - 1);
+    setMonthIndex(date.getMonth() - 1);
+    setToday(0);
+    setYesterday(0);
+    setThisMonday(undefined);
+    setLastMonday(undefined);
+    renderCalendar();
+  };
+
+  const highlightCustom = () => {
+    if (monthIndex !== date.getMonth() && monthIndex !== date.getMonth() - 1) {
+      console.log("custom");
+    }
+  };
+
   return (
     <div className="calendar-wrapper">
       <button>
@@ -12,7 +233,7 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
 
       <div className="calendar">
         <ul className="calendar__left">
-          <li className="dropdown-active">
+          <li onClick={renderToday} className="dropdown-active">
             <svg
               width="14"
               height="15"
@@ -24,7 +245,7 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
             </svg>
             <span>Today</span>
           </li>
-          <li>
+          <li onClick={renderYesterday}>
             <svg
               width="14"
               height="15"
@@ -37,7 +258,7 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
 
             <span>Yesterday</span>
           </li>
-          <li>
+          <li onClick={renderThisMonday}>
             <svg
               width="14"
               height="15"
@@ -50,7 +271,7 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
 
             <span>This Monday </span>
           </li>
-          <li>
+          <li onClick={renderLastMonday}>
             <svg
               width="14"
               height="15"
@@ -62,7 +283,7 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
             </svg>
             <span>Last Monday</span>
           </li>
-          <li>
+          <li onClick={renderThisMonth}>
             <svg
               width="14"
               height="15"
@@ -75,7 +296,7 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
 
             <span>This Month</span>
           </li>
-          <li>
+          <li onClick={renderLastMonth}>
             <svg
               width="14"
               height="15"
@@ -104,58 +325,104 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
         </ul>
         <div className="calendar__right">
           <div className="month">
-            <img src="svg/chevron-left.svg" alt="chevron left" />
-            <h4>November, 2021</h4>
-            <img src="svg/chevron-right.svg" alt="chevron right" />
+            <img
+              onClick={previousMonth}
+              src="svg/chevron-left.svg"
+              alt="chevron left"
+            />
+            <h4>
+              {month}, {year}
+            </h4>
+            <img
+              onClick={nextMonth}
+              src="svg/chevron-right.svg"
+              alt="chevron right"
+            />
           </div>
 
           <div className="weekdays">
+            <p>S</p>
             <p>M</p>
             <p>T</p>
             <p>W</p>
             <p>T</p>
             <p>F</p>
             <p>S</p>
-            <p>S</p>
           </div>
 
-          <div className="days">
-            <p className="day prev-date">29</p>
-            <p className="day prev-date">30</p>
-            <p className="day prev-date">31</p>
-            <p className="day">1</p>
-            <p className="day">2</p>
-            <p className="day">3</p>
-            <p className="day">4</p>
-            <p className="day">5</p>
-            <p className="day">6</p>
-            <p className="day">7</p>
-            <p className="day">8</p>
-            <p className="day">9</p>
-            <p className="day">10</p>
-            <p className="day">11</p>
-            <p className="day">12</p>
-            <p className="day">13</p>
-            <p className="day">14</p>
-            <p className="day">15</p>
-            <p className="day">16</p>
-            <p className="day">17</p>
-            <p className="day">18</p>
-            <p className="day">19</p>
-            <p className="day today">20</p>
-            <p className="day">21</p>
-            <p className="day">22</p>
-            <p className="day">23</p>
-            <p className="day">24</p>
-            <p className="day">25</p>
-            <p className="day">26</p>
-            <p className="day">27</p>
-            <p className="day">28</p>
-            <p className="day">29</p>
-            <p className="day">30</p>
-            <p className="day">31</p>
-            <p className="day next-date">1</p>
-          </div>
+          {previousDays && (
+            <div className="days">
+              {previousDays.map((day, index) => (
+                <p
+                  onClick={highlightCustom}
+                  className="day prev-date"
+                  key={index}
+                >
+                  {day}
+                </p>
+              ))}
+
+              {currentDays.map((day, index) => {
+                if (day === today) {
+                  return (
+                    <p
+                      onClick={highlightCustom}
+                      className={`day ${today && "activeDay"}`}
+                      key={index}
+                    >
+                      {day}
+                    </p>
+                  );
+                } else if (day === yesterday) {
+                  return (
+                    <p
+                      onClick={highlightCustom}
+                      className={`day ${yesterday && "activeDay"}`}
+                      key={index}
+                    >
+                      {day}
+                    </p>
+                  );
+                } else if (day === thisMonday) {
+                  return (
+                    <p
+                      onClick={highlightCustom}
+                      className={`day ${thisMonday && "activeDay"}`}
+                      key={index}
+                    >
+                      {day}
+                    </p>
+                  );
+                } else if (day === lastMonday) {
+                  return (
+                    <p
+                      onClick={highlightCustom}
+                      className={`day ${lastMonday && "activeDay"}`}
+                      key={index}
+                    >
+                      {day}
+                    </p>
+                  );
+                } else {
+                  return (
+                    <p onClick={highlightCustom} className="day" key={index}>
+                      {day}
+                    </p>
+                  );
+                }
+              })}
+
+              {nextDays.map((day, index) => (
+                <p
+                  onClick={highlightCustom}
+                  className="day next-date"
+                  key={index}
+                >
+                  {day}
+                </p>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

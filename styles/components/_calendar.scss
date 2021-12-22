@@ -152,15 +152,18 @@
           }
         }
       }
-      .today {
+      .activeDay {
         background: #0e9888;
-        // border-radius: 0.6rem;
         color: #ffffff !important;
       }
 
       .prev-date,
       .next-date {
         color: #c8c7c1 !important;
+        cursor: auto !important;
+        &:hover {
+          border: 0.1rem solid #fff !important;
+        }
       }
     }
   }
