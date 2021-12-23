@@ -10,17 +10,23 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
   let [yesterday, setYesterday] = React.useState<number>();
   let [thisMonday, setThisMonday] = React.useState<number>();
   let [lastMonday, setLastMonday] = React.useState<number>();
+  let [thisMonth, setThisMonth] = React.useState<boolean>(false);
+  let [lastMonth, setLastMonth] = React.useState<boolean>(false);
+  let [customDate, setCustomDate] = React.useState<boolean>(false);
+  let [dropdownText, setDropdownText] = React.useState<string>("Today");
   let [today, setToday] = React.useState<number>(new Date().getDate());
   const [year, setYear] = React.useState<string>("2029");
   const [previousDays, setPreviousDays] = React.useState<Array<number>>([]);
   const [currentDays, setCurrentDays] = React.useState<Array<number>>([]);
   const [nextDays, setNextDays] = React.useState<Array<number>>([]);
+  const [isCalendarOpen, setIsCalendarOpen] = React.useState<boolean>(true);
 
   React.useEffect(() => {
     renderCalendar();
   }, []);
 
   const renderCalendar = () => {
+      date.setDate(1);
     const months: string[] = [
       "January",
       "February",
@@ -90,9 +96,13 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
     setYesterday(undefined);
     setThisMonday(undefined);
     setLastMonday(undefined);
+    setLastMonth(false);
+    setThisMonth(false);
+    setCustomDate(false);
 
     renderCalendar();
   };
+
   const nextMonth = () => {
     date.setMonth(monthIndex + 1);
     setMonthIndex(++monthIndex);
@@ -100,21 +110,30 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
     setYesterday(undefined);
     setThisMonday(undefined);
     setLastMonday(undefined);
+    setLastMonth(false);
+    setThisMonth(false);
+    setCustomDate(false);
 
     renderCalendar();
   };
+
+  // dropdown buttons
   const renderToday = () => {
     date.setMonth(date.getMonth());
     setMonthIndex(date.getMonth());
     setYesterday(undefined);
     setThisMonday(undefined);
     setLastMonday(undefined);
-    // if (monthIndex === new Date().getMonth()) {
+    setCustomDate(false);
+    setLastMonth(false);
+    setThisMonth(false);
+    setDropdownText("Today");
+
     const today = new Date().getDate();
     setToday(today);
-    // }
     renderCalendar();
   };
+
   const renderYesterday = () => {
     date.setMonth(date.getMonth());
     setMonthIndex(date.getMonth());
@@ -122,14 +141,25 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
     setYesterday(new Date().getDate() - 1);
     setThisMonday(undefined);
     setLastMonday(undefined);
+    setCustomDate(false);
+    setLastMonth(false);
+    setThisMonth(false);
+    setDropdownText("Yesterday");
+
     renderCalendar();
   };
+
   const renderThisMonday = () => {
     date.setMonth(date.getMonth());
     setMonthIndex(date.getMonth());
     setToday(0);
     setYesterday(undefined);
     setLastMonday(undefined);
+    setCustomDate(false);
+    setLastMonth(false);
+    setThisMonth(false);
+    setDropdownText("This Monday");
+
     const dateIndex = date.getDay();
 
     switch (dateIndex) {
@@ -167,6 +197,11 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
     setToday(0);
     setYesterday(undefined);
     setThisMonday(undefined);
+    setCustomDate(false);
+    setLastMonth(false);
+    setThisMonth(false);
+    setDropdownText("Last Monday");
+
     const dateIndex = date.getDay();
 
     switch (dateIndex) {
@@ -196,7 +231,6 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
     }
 
     renderCalendar();
-    // setLastMonday(thisMonday - 6);
   };
 
   const renderThisMonth = () => {
@@ -206,8 +240,14 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
     setYesterday(0);
     setThisMonday(undefined);
     setLastMonday(undefined);
+    setLastMonth(false);
+    setThisMonth(true);
+    setCustomDate(false);
+    setDropdownText("This Month");
+
     renderCalendar();
   };
+
   const renderLastMonth = () => {
     date.setMonth(date.getMonth() - 1);
     setMonthIndex(date.getMonth() - 1);
@@ -215,25 +255,33 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
     setYesterday(0);
     setThisMonday(undefined);
     setLastMonday(undefined);
+    setThisMonth(false);
+    setLastMonth(true);
+    setCustomDate(false);
+    setDropdownText("Last Month");
+
     renderCalendar();
   };
 
   const highlightCustom = () => {
     if (monthIndex !== date.getMonth() && monthIndex !== date.getMonth() - 1) {
-      console.log("custom");
+      setLastMonth(false);
+      setThisMonth(false);
+      setCustomDate(true);
+      setDropdownText("Custom");
     }
   };
 
   return (
     <div className="calendar-wrapper">
-      <button>
-        <span>Today</span>
+      <button onClick={() => setIsCalendarOpen(!isCalendarOpen)}>
+        <span>{dropdownText}</span>
         <img src="svg/plus.svg" alt="plus icon" />
       </button>
 
-      <div className="calendar">
+      <div className={`calendar ${isCalendarOpen ? "openCalendar" : ""}`}>
         <ul className="calendar__left">
-          <li onClick={renderToday} className="dropdown-active">
+          <li onClick={renderToday} className={`${today && "dropdown-active"}`}>
             <svg
               width="14"
               height="15"
@@ -245,7 +293,10 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
             </svg>
             <span>Today</span>
           </li>
-          <li onClick={renderYesterday}>
+          <li
+            onClick={renderYesterday}
+            className={`${yesterday && "dropdown-active"}`}
+          >
             <svg
               width="14"
               height="15"
@@ -258,7 +309,10 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
 
             <span>Yesterday</span>
           </li>
-          <li onClick={renderThisMonday}>
+          <li
+            onClick={renderThisMonday}
+            className={`${thisMonday && "dropdown-active"}`}
+          >
             <svg
               width="14"
               height="15"
@@ -271,7 +325,10 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
 
             <span>This Monday </span>
           </li>
-          <li onClick={renderLastMonday}>
+          <li
+            onClick={renderLastMonday}
+            className={`${lastMonday && "dropdown-active"}`}
+          >
             <svg
               width="14"
               height="15"
@@ -283,7 +340,10 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
             </svg>
             <span>Last Monday</span>
           </li>
-          <li onClick={renderThisMonth}>
+          <li
+            onClick={renderThisMonth}
+            className={`${thisMonth && "dropdown-active"}`}
+          >
             <svg
               width="14"
               height="15"
@@ -296,7 +356,10 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
 
             <span>This Month</span>
           </li>
-          <li onClick={renderLastMonth}>
+          <li
+            onClick={renderLastMonth}
+            className={`${lastMonth && "dropdown-active"}`}
+          >
             <svg
               width="14"
               height="15"
@@ -309,7 +372,7 @@ const Calendar: React.FC<CalendarProps> = ({}) => {
 
             <span>Last Month</span>
           </li>
-          <li>
+          <li className={`${customDate && "dropdown-active"}`}>
             <svg
               width="14"
               height="15"

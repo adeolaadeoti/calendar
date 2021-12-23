@@ -28,14 +28,15 @@
   }
 
   .calendar {
-    margin-top: 1rem;
-    display: grid;
-    grid-template-columns: 18rem 30rem;
-    width: 48rem;
-
-    border: 0.1rem solid #f3f3f2;
-    box-shadow: 0px 1px 1px rgba(20, 20, 0, 0.051);
-    border-radius: 1.2rem;
+      margin-top: 1rem;
+      display: grid;
+      grid-template-columns: 18rem 30rem;
+      width: 48rem;
+      
+      border: 0.1rem solid #f3f3f2;
+      box-shadow: 0px 1px 1px rgba(20, 20, 0, 0.051);
+      border-radius: 1.2rem;
+      display: none;
 
     &__left {
       grid-column: 1/2;
@@ -166,5 +167,9 @@
         }
       }
     }
+  }
+
+  .openCalendar {
+    display: grid;
   }
 }
