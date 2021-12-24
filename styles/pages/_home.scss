@@ -3,10 +3,18 @@
   grid-template-columns: 26rem 1fr;
   height: 100vh;
 
+  @media only screen and (max-width: 62.5em) {
+    display: block;
+  }
+
   .sidebar {
     grid-column: 1/2;
     background: #f9f9f8;
     padding: 3rem;
+
+    @media only screen and (max-width: 62.5em) {
+      display: none;
+    }
 
     .top {
       display: flex;
@@ -39,6 +47,10 @@
   .content {
     grid-column: 2/-1;
     padding: 3rem;
+
+    @media only screen and (max-width: 62.5em) {
+      padding: 2rem;
+    }
 
     h1 {
       font-family: $font-tertiary;
